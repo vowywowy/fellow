@@ -90,7 +90,7 @@ body {
 }
 
 .controls.bluetooth-connected {
-    background-color: rgb(49, 49, 49);
+    background-color: rgb(36, 36, 36);
 }
 
 .power-btns {
@@ -220,10 +220,10 @@ body {
     pointer-events: none;
 }
 .onoffswitch-label {
-    display: block; 
-    overflow: hidden; 
+    display: block;
+    overflow: hidden;
     cursor: pointer;
-    border: none; 
+    border: none;
     border-radius: 4px;
 }
 .onoffswitch-inner {
@@ -233,42 +233,42 @@ body {
     transition: margin 0.2s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: block; 
-    float: left; 
-    width: 50%; 
-    height: 40px; 
-    padding: 0; 
+    display: block;
+    float: left;
+    width: 50%;
+    height: 40px;
+    padding: 0;
     line-height: 40px;
-    font-size: 16px; 
-    color: white; 
+    font-size: 12px;
+    color: white;
     font-family: 'Open Sans', sans-serif;
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
-    content: "ON";
+    content: "Stagg On";
     padding-left: 16px;
-    background-color: #86BECC; 
+    background-color: #86BECC;
     color: #FFFFFF;
 }
 .onoffswitch-inner:after {
-    content: "OFF";
+    content: "Stagg Off";
     padding-right: 16px;
-    background-color: #bebebe; 
+    background-color: #bebebe;
     color: #686868;
     text-align: right;
 }
 .onoffswitch-switch {
-    display: block; 
-    width: 40px; 
+    display: block;
+    width: 40px;
     margin: 0px;
     background: #ececec;
-    position: absolute; 
-    top: 0; 
+    position: absolute;
+    top: 0;
     bottom: 0;
     right: 74px;
-    border: none; 
+    border: none;
     border-radius: 4px;
-    transition: all 0.2s ease-in 0s; 
+    transition: all 0.2s ease-in 0s;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
     margin-left: 0;
