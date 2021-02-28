@@ -22,6 +22,11 @@ const fellow = {
         0xef, 0xdd, 0x0a, 0x04,
         0x00, 0x00, 0x04, 0x00
     ),
+    //0xefdd0a(ss)01(tt)(ww)01
+    set_temp: (temp) => Uint8Array.of(
+        0xef, 0xdd, 0x0a, 0x00,
+        0x01, temp, temp, 0x01
+    ),
     celsius: {
         max: 100,
         min: 40,
@@ -29,7 +34,12 @@ const fellow = {
     fahrenheit: {
         max: 212,
         min: 104,
-    }
+    },
+    protocol: {
+        start_seq: [0xff, 0xff, 0xff, 0xff],
+        track_seq: (i) => [0xef, 0xdd, i],
+    },
+    off_temp: 0
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -80,6 +90,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             }
             characteristic.writeValueWithoutResponse(fellow.authenticate);
+            characteristic.startNotifications().then(_ => {
+                let previous_packet;
+                let next_packet;
+                characteristic.addEventListener('characteristicvaluechanged', e => {
+                    let packet = []
+                    for (let i = 0; i < e.target.value.byteLength; i++){
+                        packet.push(e.target.value.getUint8(i))
+                    }
+                    //console.log(packet)
+                    switch (JSON.stringify(packet)) {
+                        case JSON.stringify(fellow.protocol.start_seq):
+                            previous_packet = 'start'
+                            break;
+                        case JSON.stringify(fellow.protocol.track_seq(packet[2])):
+                            if (previous_packet == 'start'){
+                                next_packet = 'current_temp'
+                            } else if (previous_packet == 'current_temp') {
+                                next_packet = 'set_temp'
+                            }
+                            break;
+                        default:
+                            if (next_packet == 'current_temp'){
+                                console.log(`current: ${packet[0]}`)
+                                previous_packet = 'current_temp'
+                                if (packet[0] != fellow.off_temp) {
+                                    document.getElementById('current_temp').textContent = packet[0]
+                                }
+                            } else if (next_packet == 'set_temp'){
+                                console.log(`set: ${packet[0]}`)
+                                previous_packet = null
+                                next_packet = null
+                                document.getElementById('target_temp').textContent = packet[0]
+                            }
+                            break;
+                    }
+                });
+            });
             ['on', 'off'].forEach(powerMode => {
                 document.getElementById(powerMode).addEventListener('click', () => {
                     console.log(characteristic)
@@ -87,7 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             });
             document.getElementById('set_temp').addEventListener('click',() => {
-                console.log(document.getElementById('temp').value)
+                console.log(characteristic)
+                characteristic.writeValueWithoutResponse(fellow.set_temp(document.getElementById('temp').value))
             })
         })
         .catch(error => {console.log(error)})
