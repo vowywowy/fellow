@@ -22,15 +22,37 @@ const fellow = {
         0xef, 0xdd, 0x0a, 0x04,
         0x00, 0x00, 0x04, 0x00
     ),
-    celciusMax: 100
+    celsius: {
+        max: 100,
+        min: 40,
+    },
+    fahrenheit: {
+        max: 212,
+        min: 104,
+    },
+    set_temp:
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('temp').addEventListener('input', (e) => {
-        document.getElementById('temp_unit').textContent = (
-            e.target.value < fellow.celciusMax ? "Celcius" : "Fahrenheit"
-        )
-        console.log(e.target.value)
+    ['change','input'].forEach(event => {
+        document.getElementById('temp').addEventListener(event, e =>{
+            switch (event) {
+                case 'change':
+                    document.getElementById('temp').value = Math.min(
+                        Math.max(
+                            e.target.value,
+                            fellow.celsius.min
+                        ),
+                        fellow.fahrenheit.max
+                    )
+                    break;
+                case 'input':
+                    document.getElementById('temp_unit').textContent = `°${(
+                        e.target.value <= fellow.celsius.max ? "C" : "F"
+                    )}`
+                    break;
+            }
+        })
     })
     document.getElementById('connect').addEventListener('click', () => {
         navigator.bluetooth.requestDevice({
@@ -53,6 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(characteristic => {
             console.log(characteristic)
+            if(characteristic.uuid){
+                document.querySelectorAll(".auth_control").forEach(authControl => {
+                    authControl.disabled = false
+                })
+            }
             characteristic.writeValueWithoutResponse(fellow.authenticate);
             ['on', 'off'].forEach(powerMode => {
                 document.getElementById(powerMode).addEventListener('click', () => {
@@ -60,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     characteristic.writeValueWithoutResponse(fellow[`power_${powerMode}`])
                 })
             });
+            document.getElementById('set_temp').addEventListener('click',() => {
+                console.log(document.getElementById('temp').value)
+            })
         })
         .catch(error => {console.log(error)})
     });
