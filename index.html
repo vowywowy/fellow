@@ -17,21 +17,38 @@
             <button class="auth_control" id="on" disabled>ON</button>
             <button class="auth_control" id="off" disabled>OFF</button>
         </div> -->
-        <div class="onoffswitch">
-            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0">
-            <label class="onoffswitch-label" for="myonoffswitch">
-                <span class="onoffswitch-inner"></span>
-                <span class="onoffswitch-switch"></span>
-            </label>
-        </div>
-        <div class="set-temp">
-            <!-- <button class="auth_control" id="set_temp" disabled>Set</button> -->
-            <input min="40" max="212" type="number" id="current_temp" value="100">
-            <div class="temp_units">
-                <label class="temp_unit">°C</label>
-                <label class="f-temp_unit temp_unit">°F</label>
+        <div class="temp-displays">
+            <div class="set-temp temp-div">
+                <!-- <button class="auth_control" id="set_temp" disabled>Set</button> -->
+                <input min="40" max="212" type="number" id="temp" placeholder="100" class="temp-display">
+                <div class="temp_units">
+                    <label for="temp" class="temp_unit">°C</label>
+                    <label for="temp" class="f-temp_unit temp_unit">°F</label>
+                </div>
             </div>
-            
+            <div class="current-temp temp-div">
+                <!-- <button class="auth_control" id="set_temp" disabled>Set</button> -->
+                <span class="temp-display-small">--</span>
+                <div class="temp_units temp_units-small">
+                    <span class="temp_unit">°C</span>
+                    <span class="f-temp_unit temp_unit">°F</span>
+                </div>
+            </div>
+            <div class="target-temp temp-div">
+                <!-- <button class="auth_control" id="set_temp" disabled>Set</button> -->
+                <span class="temp-display-small">--</span>
+                <div class="temp_units temp_units-small">
+                    <span class="temp_unit">°C</span>
+                    <span class="f-temp_unit temp_unit">°F</span>
+                </div>
+            </div>
+            <div class="onoffswitch">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0">
+                <label class="onoffswitch-label" for="myonoffswitch">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
         </div>
     </div>
 </body>

@@ -52,7 +52,7 @@ body {
 }
 
 .ekg::before {
-    content: "Brock's";
+    content: "Gabriela's";
     font-family: 'Open Sans', sans-serif;
     position: absolute;
     width: max-content;
@@ -81,7 +81,6 @@ body {
     background-position:center;
     background-color: rgb(71, 71, 71);
     background-blend-mode:multiply;
-
     font-family: 'Open Sans', sans-serif;
     align-items: center;
     justify-content: center;
@@ -98,16 +97,22 @@ body {
     font-family: inherit;
 }
 
-.set-temp {
+.temp-displays {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 300px;
+}
+
+.temp-div{
     display: flex;
-    font-size: 16px;
-    margin: 8px;
+    justify-content: flex-end;
+    align-items: center;
     border-bottom: 1px solid rgba(226, 226, 226, 0.6);
     position: relative;
 }
 
-.set-temp::after {
-    content: "set temp";
+.temp-div::after {
     font-family: 'Open Sans', sans-serif;
     position: absolute;
     width: max-content;
@@ -115,9 +120,39 @@ body {
     top: 0;
     margin-top: 4.4em;
     font-size: 0.9em;
+    padding-right: 2em;
 }
 
-#current_temp {
+.set-temp::after  { content: "set target"; }
+.target-temp::after {content: "target";}
+.current-temp::after {content: "current";}
+
+.target-temp::after,
+.current-temp::after {
+    font-size: 0.8em;
+    margin-top: 5em;
+    padding-right: 0;
+    left: 108;
+    top: 14px;
+}
+
+.set-temp {
+    grid-column:span 2;
+    margin: 1em 0;
+    width: 100%;
+}
+.current-temp, .target-temp{
+    grid-row: 2;
+    width: 150px;
+    border-bottom: none;
+    margin: 1em 0;
+    justify-content: flex-end;
+}
+
+.current-temp { margin-right:1em;}
+.target-temp { margin-left:1em;}
+
+.temp-display {
     font-size: 72px;
     font-family: inherit;
     background-color: transparent;
@@ -130,12 +165,17 @@ body {
     text-align: right;
 }
 
-#current_temp:focus {
+.temp-display-small {
+    font-size: 36px;
+    margin-right: 8px;
+}
+
+#temp:focus {
     outline: none;
 }
 
-#current_temp::-webkit-inner-spin-button, 
-#current_temp::-webkit-outer-spin-button { 
+#temp::-webkit-inner-spin-button, 
+#temp::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
 }
@@ -146,6 +186,10 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 24px;
+}
+
+.temp_units-small {
+    font-size: 16px;
 }
 
 .temp_unit {
@@ -162,8 +206,9 @@ body {
 |         POWER TOGGLE              |
  --------------------------------- */
 .onoffswitch {
-    margin: 8px;
-    position: relative; 
+    grid-column-end: -1;
+    margin: 2em 0 0 auto;
+    position: relative;
     width: 114px;
     -webkit-user-select:none;
     -moz-user-select:none;
