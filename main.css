@@ -13,7 +13,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 200px;
+    max-width: max-content;
     margin-left: auto;
     margin-right: auto;
     height: 100%;
@@ -239,29 +239,29 @@ body {
     height: 40px;
     padding: 0;
     line-height: 40px;
-    font-size: 12px;
+    font-size: 16px;
     color: white;
     font-family: 'Open Sans', sans-serif;
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
-    content: "Stagg On";
+    content: "Boiling";
     padding-left: 16px;
-    background-color: #86BECC;
-    color: #FFFFFF;
+    background-color: #86684a94;
+    color: #afafaf;
 }
 .onoffswitch-inner:after {
-    content: "Stagg Off";
+    content: "Off";
     padding-right: 16px;
-    background-color: #bebebe;
-    color: #686868;
+    background-color: #3e3e3e;
+    color: #bdbdbd;
     text-align: right;
 }
 .onoffswitch-switch {
     display: block;
     width: 40px;
     margin: 0px;
-    background: #ececec;
+    background: #7f7d7a;
     position: absolute;
     top: 0;
     bottom: 0;
