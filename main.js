@@ -39,30 +39,11 @@ const fellow = {
         start_seq: [0xff, 0xff, 0xff, 0xff],
         track_seq: (i) => [0xef, 0xdd, i],
     },
-    off_temp: 0
+    off_temp: 0,
+    disallowed_temps: [101, 102, 103]
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    ['change','input'].forEach(event => {
-        document.getElementById('temp').addEventListener(event, e =>{
-            switch (event) {
-                case 'change':
-                    document.getElementById('temp').value = Math.min(
-                        Math.max(
-                            e.target.value,
-                            fellow.celsius.min
-                        ),
-                        fellow.fahrenheit.max
-                    )
-                    break;
-                case 'input':
-                    document.getElementById('temp_unit').textContent = `°${(
-                        e.target.value <= fellow.celsius.max ? "C" : "F"
-                    )}`
-                    break;
-            }
-        })
-    })
     document.getElementById('connect').addEventListener('click', () => {
         navigator.bluetooth.requestDevice({
             filters: [{
@@ -90,6 +71,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             }
             characteristic.writeValueWithoutResponse(fellow.authenticate);
+            ['change', 'input'].forEach(event => {
+                document.getElementById('temp').addEventListener(event, e => {
+                    switch (event) {
+                        case 'change':
+                            document.getElementById('temp').value = Math.min(
+                                Math.max(
+                                    e.target.value,
+                                    fellow.celsius.min
+                                ),
+                                fellow.fahrenheit.max
+                            )
+                            if (!fellow.disallowed_temps.includes(document.getElementById('temp').value)) {
+                                characteristic.writeValueWithoutResponse(fellow.set_temp(document.getElementById('temp').value))
+                            }
+                            break;
+                        case 'input':
+                            document.getElementById('input_temp_unit').textContent = `°${(
+                                e.target.value <= fellow.celsius.max ? "C" : "F"
+                            )}`
+                            break;
+                    }
+                })
+            });
+            ['on', 'off'].forEach(powerMode => {
+                document.getElementById(powerMode).addEventListener('click', () => {
+                    console.log(characteristic)
+                    characteristic.writeValueWithoutResponse(fellow[`power_${powerMode}`])
+                })
+            });
             characteristic.startNotifications().then(_ => {
                 let previous_packet;
                 let next_packet;
@@ -121,22 +131,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                 console.log(`set: ${packet[0]}`)
                                 previous_packet = null
                                 next_packet = null
-                                document.getElementById('target_temp').textContent = packet[0]
+                                document.getElementById('set_temp').textContent = packet[0]
                             }
                             break;
                     }
                 });
             });
-            ['on', 'off'].forEach(powerMode => {
-                document.getElementById(powerMode).addEventListener('click', () => {
-                    console.log(characteristic)
-                    characteristic.writeValueWithoutResponse(fellow[`power_${powerMode}`])
-                })
-            });
-            document.getElementById('set_temp').addEventListener('click',() => {
-                console.log(characteristic)
-                characteristic.writeValueWithoutResponse(fellow.set_temp(document.getElementById('temp').value))
-            })
         })
         .catch(error => {console.log(error)})
     });
