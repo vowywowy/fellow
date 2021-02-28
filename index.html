@@ -8,25 +8,19 @@
     <title>Fellow</title>
 </head>
 <body>
-    <button id="connect">Connect</button>
-    <button class="auth_control" id="on" disabled>Power On</button>
-    <button class="auth_control" id="off" disabled>Power Off</button>
-    <button class="auth_control" id="set_temp" disabled>Set Temperature</button>
-    <input min="40" max="212" type="number" id="temp" value="100">
-    <label id="temp_unit">°C</label>
     <div class="connect">
         <p class="ekg">EKG+</p>
         <button id="connect">Connect</button>
     </div>
     <div class="controls">
         <div class="power-btns">
-            <button id="on">ON</button>
-            <button id="off">OFF</button>
+            <button class="auth_control" id="on" disabled>ON</button>
+            <button class="auth_control" id="off" disabled>OFF</button>
         </div>
         <div class="set-temp">
-            <label id="set_temp">set</label>
+            <button class="auth_control" id="set_temp" disabled>Set</button>
             <input min="40" max="212" type="number" id="temp" value="100">
-            <label id="temp_unit">&deg C</label>
+            <label id="temp_unit">°C</label>
         </div>
     </div>
 </body>

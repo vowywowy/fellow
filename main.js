@@ -29,8 +29,7 @@ const fellow = {
     fahrenheit: {
         max: 212,
         min: 104,
-    },
-    set_temp:
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
