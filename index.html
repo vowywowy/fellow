@@ -1,6 +1,8 @@
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Oswald:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="main.css">
     <script src="main.js"></script>
     <title>Fellow</title>
@@ -12,4 +14,19 @@
     <button class="auth_control" id="set_temp" disabled>Set Temperature</button>
     <input min="40" max="212" type="number" id="temp" value="100">
     <label id="temp_unit">°C</label>
+    <div class="connect">
+        <p class="ekg">EKG+</p>
+        <button id="connect">Connect</button>
+    </div>
+    <div class="controls">
+        <div class="power-btns">
+            <button id="on">ON</button>
+            <button id="off">OFF</button>
+        </div>
+        <div class="set-temp">
+            <label id="set_temp">set</label>
+            <input min="40" max="212" type="number" id="temp" value="100">
+            <label id="temp_unit">&deg C</label>
+        </div>
+    </div>
 </body>
