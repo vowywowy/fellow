@@ -44,6 +44,7 @@ const fellow = {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log(document.querySelector('.current-temp .f-temp_unit').classList.toggle('f-temp_unit'))
     document.getElementById('connect').addEventListener('click', () => {
         navigator.bluetooth.requestDevice({
             filters: [{
@@ -66,9 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(characteristic => {
             console.log(characteristic)
             if(characteristic.uuid){
-                document.querySelectorAll(".auth_control").forEach(authControl => {
-                    authControl.disabled = false
-                })
+                document.querySelector('.temp-displays').classList.remove('hidden')
+                document.getElementById('connect').classList.add('connected')
+                document.getElementById('connect').textContent = 'Connected'
             }
             characteristic.writeValueWithoutResponse(fellow.authenticate);
             ['change', 'input'].forEach(event => {
@@ -87,19 +88,25 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             break;
                         case 'input':
-                            document.getElementById('input_temp_unit').textContent = `°${(
-                                e.target.value <= fellow.celsius.max ? "C" : "F"
-                            )}`
+                            if (e.target.value <= fellow.celsius.max){
+                                document.querySelector('.set-temp .f-temp_unit').classList.remove('bold-temp_unit')
+                                document.querySelector('.set-temp .c-temp_unit').classList.add('bold-temp_unit')
+                            } else {
+                                document.querySelector('.set-temp .f-temp_unit').classList.add('bold-temp_unit')
+                                document.querySelector('.set-temp .c-temp_unit').classList.remove('bold-temp_unit')
+                            }
+                            //document.getElementById('input_temp_unit').textContent = `°${(
+                            //    e.target.value <= fellow.celsius.max ? "C" : "F"
+                            //)}`
                             break;
                     }
                 })
             });
-            ['on', 'off'].forEach(powerMode => {
-                document.getElementById(powerMode).addEventListener('click', () => {
-                    console.log(characteristic)
-                    characteristic.writeValueWithoutResponse(fellow[`power_${powerMode}`])
-                })
-            });
+            document.getElementById("myonoffswitch").addEventListener('change',()=>{
+                document.getElementById("myonoffswitch").checked
+                    ? characteristic.writeValueWithoutResponse(fellow['power_on'])
+                    : characteristic.writeValueWithoutResponse(fellow['power_off'])
+            })
             characteristic.startNotifications().then(_ => {
                 let previous_packet;
                 let next_packet;
@@ -124,14 +131,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (next_packet == 'current_temp'){
                                 console.log(`current: ${packet[0]}`)
                                 previous_packet = 'current_temp'
-                                if (packet[0] != fellow.off_temp) {
-                                    document.getElementById('current_temp').textContent = packet[0]
-                                }
+                                document.getElementById('current_temp').textContent = packet[0] != fellow.off_temp
+                                    ? packet[0]
+                                    : "--"
                             } else if (next_packet == 'set_temp'){
                                 console.log(`set: ${packet[0]}`)
                                 previous_packet = null
                                 next_packet = null
-                                document.getElementById('set_temp').textContent = packet[0]
+                                document.getElementById('target_temp').textContent = packet[0]
                             }
                             break;
                     }

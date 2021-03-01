@@ -52,7 +52,7 @@ body {
 }
 
 .ekg::before {
-    content: "Gabriela's";
+    content: "Brock's";
     font-family: 'Open Sans', sans-serif;
     position: absolute;
     width: max-content;
@@ -102,6 +102,10 @@ body {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     width: 300px;
+}
+
+.hidden{
+    display: none;
 }
 
 .temp-div{
@@ -174,10 +178,10 @@ body {
     outline: none;
 }
 
-#temp::-webkit-inner-spin-button, 
-#temp::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+#temp::-webkit-inner-spin-button,
+#temp::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .temp_units {
@@ -192,17 +196,16 @@ body {
     font-size: 16px;
 }
 
-.temp_unit {
+.c-temp_unit,
+.f-temp_unit{
     color:rgba(255, 255, 255, 0.4);
 }
-
-.c-temp_unit, 
-.f-temp_unit{
+.bold-temp_unit{
     color: white;
     font-weight: bolder;
 }
 
-/* ---------------------------------- 
+/* ----------------------------------
 |         POWER TOGGLE              |
  --------------------------------- */
 .onoffswitch {
@@ -220,59 +223,59 @@ body {
     pointer-events: none;
 }
 .onoffswitch-label {
-    display: block; 
-    overflow: hidden; 
+    display: block;
+    overflow: hidden;
     cursor: pointer;
-    border: none; 
+    border: none;
     border-radius: 4px;
 }
 .onoffswitch-inner {
-    display: block; 
-    width: 200%; 
+    display: block;
+    width: 200%;
     margin-left: -100%;
     transition: margin 0.2s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: block; 
-    float: left; 
-    width: 50%; 
-    height: 40px; 
-    padding: 0; 
+    display: block;
+    float: left;
+    width: 50%;
+    height: 40px;
+    padding: 0;
     line-height: 40px;
-    font-size: 16px; 
-    color: white; 
+    font-size: 16px;
+    color: white;
     font-family: 'Open Sans', sans-serif;
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
     content: "ON";
     padding-left: 16px;
-    background-color: #86BECC; 
+    background-color: #86BECC;
     color: #FFFFFF;
 }
 .onoffswitch-inner:after {
     content: "OFF";
     padding-right: 16px;
-    background-color: #bebebe; 
+    background-color: #bebebe;
     color: #686868;
     text-align: right;
 }
 .onoffswitch-switch {
-    display: block; 
-    width: 40px; 
+    display: block;
+    width: 40px;
     margin: 0px;
     background: #ececec;
-    position: absolute; 
-    top: 0; 
+    position: absolute;
+    top: 0;
     bottom: 0;
     right: 74px;
-    border: none; 
+    border: none;
     border-radius: 4px;
-    transition: all 0.2s ease-in 0s; 
+    transition: all 0.2s ease-in 0s;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
     margin-left: 0;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    right: 0px; 
+    right: 0px;
 }
