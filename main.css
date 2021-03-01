@@ -52,7 +52,7 @@ body {
 }
 
 .ekg::before {
-    content: "Gabriela's";
+    content: "Brock's";
     font-family: 'Open Sans', sans-serif;
     position: absolute;
     width: max-content;
