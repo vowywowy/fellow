@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(characteristic)
             if(characteristic.uuid){
                 document.querySelector('.temp-displays').classList.remove('hidden')
+                document.querySelector('.controls').classList.add('bluetooth-connected')
                 document.getElementById('connect').classList.add('connected')
                 document.getElementById('connect').textContent = 'Connected'
             }
