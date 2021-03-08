@@ -1,0 +1,54 @@
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Oswald:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+    <script src="main.js"></script>
+    <title>Fellow</title>
+</head>
+<body>
+    <div class="connect">
+        <p class="ekg">EKG+</p>
+        <button id="connect" class="">Connect</button>
+    </div>
+    <div class="controls">
+        <!-- <div class="power-btns">
+            <button class="auth_control" id="on" disabled>ON</button>
+            <button class="auth_control" id="off" disabled>OFF</button>
+        </div> -->
+        <div class="temp-displays hidden">
+            <div class="set-temp temp-div">
+                <!-- <button class="auth_control" id="set_temp" disabled>Set</button> -->
+                <input min="40" max="212" type="number" id="temp" placeholder="100" class="temp-display">
+                <div class="temp_units">
+                    <label for="temp" class="bold-temp_unit c-temp_unit">°C</label>
+                    <label for="temp" class="f-temp_unit">°F</label>
+                </div>
+            </div>
+            <div class="current-temp temp-div">
+                <!-- <button class="auth_control" id="set_temp" disabled>Set</button> -->
+                <span id="current_temp" class="temp-display-small"></span>
+                <div class="temp_units temp_units-small">
+                    <span class="bold-temp_unit c-temp_unit">°C</span>
+                    <span class="f-temp_unit">°F</span>
+                </div>
+            </div>
+            <div class="target-temp temp-div">
+                <!-- <button class="auth_control" id="set_temp" disabled>Set</button> -->
+                <span id="target_temp" class="temp-display-small"></span>
+                <div class="temp_units temp_units-small">
+                    <span class="bold-temp_unit c-temp_unit">°C</span>
+                    <span class="f-temp_unit">°F</span>
+                </div>
+            </div>
+            <div class="onoffswitch">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0">
+                <label class="onoffswitch-label" for="myonoffswitch">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+</body>

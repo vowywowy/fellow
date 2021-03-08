@@ -1,0 +1,282 @@
+body {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    height: 100vh;
+    align-items: center;
+    background-color: #171717;
+    margin: 0;
+    padding: 0;
+}
+.connect {
+    font-family: 'Open Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
+    color: white;
+}
+
+#connect {
+    width: 100%;
+    padding: 1em 1.8em;
+    font-family: 'Open Sans', sans-serif;
+    border: none;
+    background-color: #4e4e4e;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#connect:focus {
+    outline: none;
+}
+
+#connect.connected {
+    background-color: rgba(32, 32, 32, 0.4);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid #4e4e4e;
+}
+
+#connect:hover {
+    background-color: #616161;
+}
+
+#connect.connected:hover {
+    background-color: rgba(32, 32, 32, 0.4);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid #4e4e4e;
+}
+
+.ekg::before {
+    content: "Brock's";
+    font-family: 'Open Sans', sans-serif;
+    position: absolute;
+    width: max-content;
+    left: 6px;
+    top: 8px;
+    font-size: 18px;
+}
+
+.ekg {
+    font-family: 'Oswald', sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    font-size: 100px;
+    width: 100%;
+}
+
+.controls {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* background-image: url("assets/Stagg-EKG-Electric-Pour-over-Kettle-by-Fellow-Featured-image-672x372.jpg"); */
+    background-image: url("assets/stagg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover, contain;
+    background-position:center;
+    background-color: rgb(71, 71, 71);
+    background-blend-mode:multiply;
+    font-family: 'Open Sans', sans-serif;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+
+.controls.bluetooth-connected {
+    background-color: rgb(36, 36, 36);
+}
+
+.power-btns {
+    font-family: inherit;
+}
+
+.temp-displays {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 300px;
+}
+
+.hidden{
+    display: none;
+}
+
+.temp-div{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 1px solid rgba(226, 226, 226, 0.6);
+    position: relative;
+}
+
+.temp-div::after {
+    font-family: 'Open Sans', sans-serif;
+    position: absolute;
+    width: max-content;
+    left: 0;
+    top: 0;
+    margin-top: 4.4em;
+    font-size: 0.9em;
+    padding-right: 2em;
+}
+
+.set-temp::after  { content: "set target"; }
+.target-temp::after {content: "target";}
+.current-temp::after {content: "current";}
+
+.target-temp::after,
+.current-temp::after {
+    font-size: 0.8em;
+    margin-top: 5em;
+    padding-right: 0;
+    left: 108;
+    top: 14px;
+}
+
+.set-temp {
+    grid-column:span 2;
+    margin: 1em 0;
+    width: 100%;
+}
+.current-temp, .target-temp{
+    grid-row: 2;
+    width: 150px;
+    border-bottom: none;
+    margin: 1em 0;
+    justify-content: flex-end;
+}
+
+.current-temp { margin-right:1em;}
+.target-temp { margin-left:1em;}
+
+.temp-display {
+    font-size: 72px;
+    font-family: inherit;
+    background-color: transparent;
+    border: none;
+    color: white;
+    padding: 0;
+    padding-left: 20px;
+    margin: 0;
+    margin-right: 10px;
+    text-align: right;
+}
+
+.temp-display-small {
+    font-size: 36px;
+    margin-right: 8px;
+}
+
+#temp:focus {
+    outline: none;
+}
+
+#temp::-webkit-inner-spin-button,
+#temp::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.temp_units {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.temp_units-small {
+    font-size: 16px;
+}
+
+.c-temp_unit,
+.f-temp_unit{
+    color:rgba(255, 255, 255, 0.4);
+}
+.bold-temp_unit{
+    color: white;
+    font-weight: bolder;
+}
+
+/* ----------------------------------
+|         POWER TOGGLE              |
+ --------------------------------- */
+.onoffswitch {
+    grid-column-end: -1;
+    margin: 2em 0 0 auto;
+    position: relative;
+    width: 128px;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.onoffswitch-label {
+    display: block;
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+}
+.onoffswitch-inner {
+    display: block;
+    width: 200%;
+    margin-left: -100%;
+    transition: margin 0.2s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 40px;
+    padding: 0;
+    line-height: 40px;
+    font-size: 16px;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    box-sizing: border-box;
+}
+
+.onoffswitch-inner:before {
+    content: "heating";
+    padding-left: 16px;
+    background-color: #86684a94;
+    color: #afafaf;
+}
+.onoffswitch-inner:after {
+    content: "off";
+    padding-right: 16px;
+    background-color: #3e3e3e;
+    color: #bdbdbd;
+    text-align: right;
+}
+.onoffswitch-switch {
+    display: block;
+    width: 40px;
+    margin: 0px;
+    background: #7f7d7a;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 88px;
+    border: none;
+    border-radius: 4px;
+    transition: all 0.2s ease-in 0s;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px;
+}

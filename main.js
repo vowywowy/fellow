@@ -27,7 +27,7 @@ const fellow = {
         0xef, 0xdd, 0x0a, 0x00,
         0x01, temp, temp, 0x01
     ),
-    celsius: {
+    celcius: {
         max: 100,
         min: 40,
     },
@@ -43,109 +43,122 @@ const fellow = {
     disallowed_temps: [101, 102, 103]
 }
 
+let bluetoothDevice;
+let firstConnect = true;
+let lastPowerCommand;
+
 document.addEventListener('DOMContentLoaded', () => {
-    console.log(document.querySelector('.current-temp .f-temp_unit').classList.toggle('f-temp_unit'))
     document.getElementById('connect').addEventListener('click', () => {
         navigator.bluetooth.requestDevice({
             filters: [{
                 namePrefix: fellow.namePrefix,
                 services: [fellow.service]
             }]
-        })
-        .then(device => {
-            console.log(device);
-            return device.gatt.connect();
-        })
-        .then(server => {
-            console.log(server);
-            return server.getPrimaryService(fellow.service);
-        })
-        .then(service => {
-            console.log(service);
-            return service.getCharacteristic(fellow.characteristic);
-        })
-        .then(characteristic => {
-            console.log(characteristic)
-            if(characteristic.uuid){
-                document.querySelector('.temp-displays').classList.remove('hidden')
-                document.querySelector('.controls').classList.add('bluetooth-connected')
-                document.getElementById('connect').classList.add('connected')
-                document.getElementById('connect').textContent = 'Connected'
-            }
-            characteristic.writeValueWithoutResponse(fellow.authenticate);
-            ['change', 'input'].forEach(event => {
-                document.getElementById('temp').addEventListener(event, e => {
-                    switch (event) {
-                        case 'change':
-                            document.getElementById('temp').value = Math.min(
-                                Math.max(
-                                    e.target.value,
-                                    fellow.celsius.min
-                                ),
-                                fellow.fahrenheit.max
-                            )
-                            if (!fellow.disallowed_temps.includes(document.getElementById('temp').value)) {
-                                characteristic.writeValueWithoutResponse(fellow.set_temp(document.getElementById('temp').value))
-                            }
-                            break;
-                        case 'input':
-                            if (e.target.value <= fellow.celsius.max){
-                                document.querySelector('.set-temp .f-temp_unit').classList.remove('bold-temp_unit')
-                                document.querySelector('.set-temp .c-temp_unit').classList.add('bold-temp_unit')
-                            } else {
-                                document.querySelector('.set-temp .f-temp_unit').classList.add('bold-temp_unit')
-                                document.querySelector('.set-temp .c-temp_unit').classList.remove('bold-temp_unit')
-                            }
-                            //document.getElementById('input_temp_unit').textContent = `°${(
-                            //    e.target.value <= fellow.celsius.max ? "C" : "F"
-                            //)}`
-                            break;
-                    }
-                })
-            });
-            document.getElementById("myonoffswitch").addEventListener('change',()=>{
-                document.getElementById("myonoffswitch").checked
-                    ? characteristic.writeValueWithoutResponse(fellow['power_on'])
-                    : characteristic.writeValueWithoutResponse(fellow['power_off'])
-            })
-            characteristic.startNotifications().then(_ => {
-                let previous_packet;
-                let next_packet;
-                characteristic.addEventListener('characteristicvaluechanged', e => {
-                    let packet = []
-                    for (let i = 0; i < e.target.value.byteLength; i++){
-                        packet.push(e.target.value.getUint8(i))
-                    }
-                    //console.log(packet)
-                    switch (JSON.stringify(packet)) {
-                        case JSON.stringify(fellow.protocol.start_seq):
-                            previous_packet = 'start'
-                            break;
-                        case JSON.stringify(fellow.protocol.track_seq(packet[2])):
-                            if (previous_packet == 'start'){
-                                next_packet = 'current_temp'
-                            } else if (previous_packet == 'current_temp') {
-                                next_packet = 'set_temp'
-                            }
-                            break;
-                        default:
-                            if (next_packet == 'current_temp'){
-                                console.log(`current: ${packet[0]}`)
-                                previous_packet = 'current_temp'
-                                document.getElementById('current_temp').textContent = packet[0] != fellow.off_temp
-                                    ? packet[0]
-                                    : "--"
-                            } else if (next_packet == 'set_temp'){
-                                console.log(`set: ${packet[0]}`)
-                                previous_packet = null
-                                next_packet = null
-                                document.getElementById('target_temp').textContent = packet[0]
-                            }
-                            break;
-                    }
-                });
-            });
-        })
-        .catch(error => {console.log(error)})
+        }).then(device => {
+            bluetoothDevice = device
+            bluetoothDevice.addEventListener('gattserverdisconnected', () => connect());
+            connect()
+        }).catch(error => console.log(error))
     });
 })
+function setStatus(status) { document.getElementById('connection_status').textContent = status }
+function connect() {
+    firstConnect = false;
+    setStatus("Connecting")
+    bluetoothDevice.gatt.connect()
+    .then(server => {
+        setStatus("Getting service");
+        console.log(server)
+        return server.getPrimaryService(fellow.service);
+    }).then(service => {
+        console.log(service);
+        setStatus("Getting characteristic")
+        return service.getCharacteristic(fellow.characteristic);
+    }).then(characteristic => {
+        console.log(characteristic)
+        if (characteristic.uuid) {
+            document.querySelectorAll(".auth_control").forEach(authControl => {
+                authControl.disabled = false
+            })
+        }
+        setStatus("Authenticating")
+        characteristic.writeValueWithoutResponse(fellow.authenticate);
+        ['change', 'input'].forEach(event => {
+            document.getElementById('set_temp').addEventListener(event, e => {
+                switch (event) {
+                    case 'change':
+                        e.target.value = Math.min(
+                            Math.max(
+                                e.target.value,
+                                fellow.celcius.min
+                            ),
+                            fellow.fahrenheit.max
+                        )
+                        if (!fellow.disallowed_temps.includes(e.target.value)) {
+                            characteristic.writeValueWithoutResponse(fellow.set_temp(e.target.value))
+                        }
+                        break;
+                }
+            })
+        });
+        ['on', 'off'].forEach(powerMode => {
+            document.getElementById(powerMode).addEventListener('click', () => {
+                console.log(characteristic)
+                characteristic.writeValueWithoutResponse(fellow[`power_${powerMode}`])
+                lastPowerCommand = powerMode;
+            })
+        });
+        setStatus("Getting temperature");
+        characteristic.startNotifications().then(_ => {
+            document.querySelectorAll(".auth_control").forEach(authControl => {
+                authControl.disabled = false
+            })
+            setStatus("Connected");
+            let previous_packet;
+            let next_packet;
+            characteristic.addEventListener('characteristicvaluechanged', e => {
+                let packet = []
+                for (let i = 0; i < e.target.value.byteLength; i++) {
+                    packet.push(e.target.value.getUint8(i))
+                }
+                switch (JSON.stringify(packet)) {
+                    case JSON.stringify(fellow.protocol.start_seq):
+                        previous_packet = 'start'
+                        break;
+                    case JSON.stringify(fellow.protocol.track_seq(packet[2])):
+                        if (previous_packet == 'start') {
+                            next_packet = 'current_temp'
+                        } else if (previous_packet == 'current_temp') {
+                            next_packet = 'target_temp'
+                        }
+                        break;
+                    default:
+                        if (next_packet == 'current_temp') {
+                            console.log(`current temp: ${packet[0]}`)
+                            previous_packet = next_packet
+                            if (packet[0] != fellow.off_temp) {
+                                document.getElementById('kettle_status').textContent = "Heating"
+                                document.getElementById(next_packet).textContent = packet[0]
+                            } else {
+                                document.getElementById('kettle_status').textContent = "Off"
+                                document.getElementById(next_packet).textContent = "--"
+                            }
+                        } else if (next_packet == 'target_temp') {
+                            console.log(`target temp: ${packet[0]}`)
+                            let detectedUnit = packet[0] <= fellow.celcius.max ? 'celcius' : 'fahrenheit';
+                            document.getElementById('set_temp').min = fellow[detectedUnit].min
+                            document.getElementById('set_temp').max = fellow[detectedUnit].max
+                            document.getElementById('set_temp').placeholder = (fellow[detectedUnit].max + fellow[detectedUnit].min) / 2
+                            document.querySelectorAll('.temp_unit').forEach(temp_unit => {
+                                temp_unit.textContent = `°${detectedUnit == 'celcius' ? "C" : "F"}`
+                            })
+                            document.getElementById(next_packet).textContent = packet[0]
+                            previous_packet = null
+                            next_packet = null
+                        }
+                        break;
+                }
+            });
+        });
+    }).catch(() => connect())
+}
