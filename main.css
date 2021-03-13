@@ -40,8 +40,8 @@ body {
     gap: 4px;
 }
 
-:is(span[id$="_status"],span[id$="_temp"]) {
-    color: red;
+:is(.temp_display, .status) {
+    opacity: 0.5
 }
 
 :is(button, input[type=number] ) {
@@ -65,7 +65,7 @@ div.power {
 }
 
 :disabled {
-    opacity: 0.2;
+    opacity: 0.5;
     cursor: auto !important;
 }
 
@@ -89,6 +89,9 @@ div.power {
 #set_temp {
     text-align: right;
     padding-right: calc(var(--padding-base) * 2);
+}
+#set_temp:focus {
+    outline: none;
 }
 
 .temp {

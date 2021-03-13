@@ -40,12 +40,9 @@ const fellow = {
         track_seq: (i) => [0xef, 0xdd, i],
     },
     off_temp: 0,
-    disallowed_temps: [101, 102, 103]
 }
 
 let bluetoothDevice;
-let firstConnect = true;
-let lastPowerCommand;
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('connect').addEventListener('click', () => {
@@ -63,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 function setStatus(status) { document.getElementById('connection_status').textContent = status }
 function connect() {
-    firstConnect = false;
     setStatus("Connecting")
     bluetoothDevice.gatt.connect()
     .then(server => {
@@ -75,6 +71,7 @@ function connect() {
         setStatus("Getting characteristic")
         return service.getCharacteristic(fellow.characteristic);
     }).then(characteristic => {
+        let detectedUnit;
         console.log(characteristic)
         if (characteristic.uuid) {
             document.querySelectorAll(".auth_control").forEach(authControl => {
@@ -83,29 +80,20 @@ function connect() {
         }
         setStatus("Authenticating")
         characteristic.writeValueWithoutResponse(fellow.authenticate);
-        ['change', 'input'].forEach(event => {
-            document.getElementById('set_temp').addEventListener(event, e => {
-                switch (event) {
-                    case 'change':
-                        e.target.value = Math.min(
-                            Math.max(
-                                e.target.value,
-                                fellow.celcius.min
-                            ),
-                            fellow.fahrenheit.max
-                        )
-                        if (!fellow.disallowed_temps.includes(e.target.value)) {
-                            characteristic.writeValueWithoutResponse(fellow.set_temp(e.target.value))
-                        }
-                        break;
-                }
-            })
+        document.getElementById('set_temp').addEventListener('change', e => {
+            e.target.value = Math.min(
+                Math.max(
+                    e.target.value,
+                    fellow[detectedUnit].min
+                ),
+                fellow[detectedUnit].max
+            );
+            characteristic.writeValueWithoutResponse(fellow.set_temp(e.target.value));
         });
         ['on', 'off'].forEach(powerMode => {
             document.getElementById(powerMode).addEventListener('click', () => {
                 console.log(characteristic)
                 characteristic.writeValueWithoutResponse(fellow[`power_${powerMode}`])
-                lastPowerCommand = powerMode;
             })
         });
         setStatus("Getting temperature");
@@ -145,7 +133,7 @@ function connect() {
                             }
                         } else if (next_packet == 'target_temp') {
                             console.log(`target temp: ${packet[0]}`)
-                            let detectedUnit = packet[0] <= fellow.celcius.max ? 'celcius' : 'fahrenheit';
+                            detectedUnit = packet[0] <= fellow.celcius.max ? 'celcius' : 'fahrenheit';
                             document.getElementById('set_temp').min = fellow[detectedUnit].min
                             document.getElementById('set_temp').max = fellow[detectedUnit].max
                             document.getElementById('set_temp').placeholder = (fellow[detectedUnit].max + fellow[detectedUnit].min) / 2
