@@ -150,3 +150,5 @@ function connect() {
         });
     }).catch(() => connect())
 }
+
+window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js"))
