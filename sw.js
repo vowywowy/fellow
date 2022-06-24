@@ -3,11 +3,10 @@ self.addEventListener("install", event => {
     event.waitUntil(
         caches.open("v1").then(cache => {
             cache.addAll([
-                "/",
-                "/index.html",
-                "/main.css",
-                "/main.js",
-                "/assets/icon.svg",
+                "index.html",
+                "main.css",
+                "main.js",
+                "assets/icon.svg",
             ])
         })
     )
